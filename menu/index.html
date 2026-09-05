@@ -739,11 +739,11 @@
   </a>
 </footer>
 
-<!-- Popup promoción Happy Hour -->
+<!-- Popup promoción (rota al azar: Happy Hour o Karaoke) -->
 <div id="promoModal" aria-hidden="true">
   <div class="promo-caja">
     <button id="promoCerrar" aria-label="Cerrar promoción">✕</button>
-    <img class="promo-img" src="img/promo-happy-hour.jpg" alt="Promoción Happy Hour: Margaritas 2x1 por $8 de martes a viernes 4-7pm">
+    <img class="promo-img" id="promoImg" src="" alt="Promoción">
   </div>
 </div>
 
@@ -751,11 +751,17 @@
 (function() {
   var modal = document.getElementById('promoModal');
   var btn = document.getElementById('promoCerrar');
-  if (!modal || !btn) return;
-  // Recordar si el usuario ya la cerró en esta sesion de navegador
-  var clave = 'promo_hh_visto';
+  var img = document.getElementById('promoImg');
+  if (!modal || !btn || !img) return;
+  // Rotación aleatoria: elige una de las promos cada vez que carga
+  var promos = [
+    { src: 'img/promo-happy-hour.jpg', alt: 'Promoción Happy Hour: Margaritas 2x1 por $8 de martes a viernes 4-7pm' },
+    { src: 'img/promo-karaoke.jpg', alt: 'Karaoke miércoles y viernes 8-11pm: nachos $8 y cubetazo de Balboa o Atlas $10' }
+  ];
+  var elegida = promos[Math.floor(Math.random() * promos.length)];
+  img.src = elegida.src;
+  img.alt = elegida.alt;
   function abrir() {
-    if (sessionStorage.getItem(clave)) return;
     modal.classList.add('abierto');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -764,7 +770,6 @@
     modal.classList.remove('abierto');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    try { sessionStorage.setItem(clave, '1'); } catch (e) {}
   }
   btn.addEventListener('click', cerrar);
   modal.addEventListener('click', function(e) { if (e.target === modal) cerrar(); });
