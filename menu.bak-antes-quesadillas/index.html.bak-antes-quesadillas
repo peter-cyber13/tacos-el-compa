@@ -470,31 +470,29 @@
   </div>
 
   <h3 style="color:var(--crema); margin:2rem 0 .8rem;">Quesadillas <span style="font-size:.8rem; color:#a8a29e; font-weight:400;">— Tortilla dorada al comal o frita con queso derretido</span></h3>
-
-  <div style="margin-bottom:1.5rem;border-radius:12px;overflow:hidden">
-    <img src="img/quesadilla-tinga.jpg" alt="Quesadillas" loading="lazy" style="width:100%;display:block">
-  </div>
-
   <div class="grid">
     <article class="dish">
+      <img src="img/quesadilla-tradicional.jpg" alt="Quesadilla Tradicional" loading="lazy">
       <div class="info"><h3>Tradicional</h3><p>Queso Oaxaca/asadero derretido en tortilla dorada y crujiente. Simple, pero perfecto.</p><div class="price-tag">Precio: $7.50</div></div>
     </article>
     <article class="dish">
+      <img src="img/quesadilla-papa.jpg" alt="Quesadilla de Queso con Papa" loading="lazy">
       <div class="info"><h3>Queso con Papa</h3><p>Queso fundido con papita cocida sazonada. Cremosa, rica y reconfortante.</p><div class="price-tag">Precio: $8.50</div></div>
     </article>
     <article class="dish">
+      <img src="img/quesadilla-chorizo.jpg" alt="Quesadilla de Queso con Chorizo" loading="lazy">
       <div class="info"><h3>Queso con Chorizo</h3><p>Queso derretido con chorizito dorado. Combinación ganadora, ¡picosita y sabrosa!</p><div class="price-tag">Precio: $8.50</div></div>
     </article>
     <article class="dish">
+      <img src="img/quesadilla-hongos.jpg" alt="Quesadilla de Queso con Hongos" loading="lazy">
       <div class="info"><h3>Queso con Hongos</h3><p>Champiñones salteados con ajo, cebolla y un toque de epazote, fundidos con queso. ¡Delicia de la casa!</p><div class="price-tag">Precio: $8.50</div></div>
     </article>
     <article class="dish">
+      <img src="img/quesadilla-tinga.jpg" alt="Quesadilla de Tinga" loading="lazy">
       <div class="info"><h3>Tinga</h3><p>Pollo deshebrado guisado en salsa de jitomate, cebolla y chipotle, con queso fundido. Sabrosa y picosita.</p><div class="price-tag">Precio: $8.50</div></div>
     </article>
     <article class="dish">
-      <div class="info"><h3>Queso con Tinga</h3><p>Tinga de pollo bañada en queso fundido. El guiso picosito con queso derretido, una delicia.</p><div class="price-tag">Precio: $8.50</div></div>
-    </article>
-    <article class="dish">
+      <img src="img/quesadilla-papa-chorizo.jpg" alt="Quesadilla de Papa con Chorizo" loading="lazy">
       <div class="info"><h3>Papa con Chorizo</h3><p>La dúo perfecta: papita con chorizo y queso derretido en tortilla crujiente. ¡Imperdible!</p><div class="price-tag">Precio: $8.50</div></div>
     </article>
   </div>
