@@ -1,0 +1,14 @@
+name = "encuesta-tacos-el-compa"
+main = "src/worker.js"
+compatibility_date = "2024-12-01"
+account_id = "5220ba70c5fb9ba5052aad13c1bac5fc"
+workers_dev = true
+
+routes = [
+  { pattern = "encuesta.tacos-el-compa.com/*", zone_id = "61731cbb5fea140666ff4a0cf33021cd" }
+]
+
+[[d1_databases]]
+binding = "tacos_encuesta"
+database_name = "tacos-encuesta"
+database_id = "eb83acaf-efcc-4a63-bbd2-91a6636a98d4"
