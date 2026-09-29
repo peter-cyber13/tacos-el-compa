@@ -1,8 +1,9 @@
 // Tacos El Compa - Encuesta Worker
 // Handles: GET → serve HTML, POST /api/encuesta → save to D1
+// Static assets (images) are served automatically via wrangler assets config
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
@@ -21,7 +22,6 @@ export default {
         const body = await request.json();
         const { mood, factura, comentarios } = body;
 
-        // Validate
         if (!mood || !['feliz', 'neutral', 'triste'].includes(mood)) {
           return new Response(JSON.stringify({ ok: false, error: 'Selecciona una opción válida' }), {
             status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders }
@@ -48,15 +48,16 @@ export default {
     }
 
     // GET — serve the HTML survey form
-    if (request.method === 'GET') {
+    if (request.method === 'GET' && url.pathname === '/' || url.pathname === '') {
       return new Response(HTML, {
         status: 200,
         headers: { 'Content-Type': 'text/html; charset=utf-8' }
       });
     }
 
-    // 404
-    return new Response('Not found', { status: 404, headers: corsHeaders });
+    // Static assets are served automatically by Workers Assets (wrangler config)
+    // If we reach here, return 404
+    return new Response('Not found - try the survey form at /', { status: 404, headers: corsHeaders });
   }
 };
 
@@ -110,12 +111,13 @@ const HTML = `<!DOCTYPE html>
   .mood-option input { display: none; }
   .mood-btn {
     display: flex; align-items: center; justify-content: center;
-    width: 72px; height: 72px; border-radius: 50%;
-    border: 3px solid transparent; cursor: pointer; font-size: 36px;
-    transition: all 0.2s ease; background: var(--green-light);
+    width: 100px; height: 100px; border-radius: 50%;
+    border: 3px solid transparent; cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    overflow: hidden;
   }
-  .mood-btn.neutral { background: var(--yellow-light); }
-  .mood-btn.sad { background: var(--red-light); }
+  .mood-btn img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
   .mood-btn:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
   .mood-option input:checked + .mood-btn { border-color: var(--green); box-shadow: 0 0 0 3px rgba(52,122,73,0.2); transform: scale(1.08); }
   .mood-option input:checked + .mood-btn.neutral { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(252,180,22,0.3); }
@@ -177,17 +179,17 @@ const HTML = `<!DOCTYPE html>
     <div class="moods" id="moodGroup">
       <div class="mood-option">
         <input type="radio" name="mood" id="moodHappy" value="feliz">
-        <label for="moodHappy" class="mood-btn">😊</label>
+        <label for="moodHappy" class="mood-btn"><img src="/carita-feliz.png" alt="Feliz"></label>
         <span class="mood-label-emoji happy">¡Buenísimo!</span>
       </div>
       <div class="mood-option">
         <input type="radio" name="mood" id="moodNeutral" value="neutral">
-        <label for="moodNeutral" class="mood-btn neutral">😐</label>
+        <label for="moodNeutral" class="mood-btn neutral"><img src="/carita-neutral.png" alt="Neutral"></label>
         <span class="mood-label-emoji neutral">Regular</span>
       </div>
       <div class="mood-option">
         <input type="radio" name="mood" id="moodSad" value="triste">
-        <label for="moodSad" class="mood-btn sad">☹️</label>
+        <label for="moodSad" class="mood-btn sad"><img src="/carita-triste.png" alt="Triste"></label>
         <span class="mood-label-emoji sad">Deficiente</span>
       </div>
     </div>

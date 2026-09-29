@@ -3,6 +3,7 @@ main = "src/worker.js"
 compatibility_date = "2024-12-01"
 account_id = "5220ba70c5fb9ba5052aad13c1bac5fc"
 workers_dev = true
+assets = { directory = "static", binding = "ASSETS" }
 
 [[d1_databases]]
 binding = "tacos_encuesta"
