@@ -29,9 +29,10 @@ export default {
           return new Response(JSON.stringify({ ok: false, error: 'Estado de ánimo inválido' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
         if (!factura || factura.trim() === '')
           return new Response(JSON.stringify({ ok: false, error: 'La factura es obligatoria' }), { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
+        const ahora = new Date().toISOString(); // UTC ISO
         const result = await env.tacos_encuesta.prepare(
-          'INSERT INTO encuestas (mood, factura, comentarios) VALUES (?1, ?2, ?3)'
-        ).bind(mood, factura.trim(), (comentarios || '').trim()).run();
+          'INSERT INTO encuestas (mood, factura, comentarios, created_at) VALUES (?1, ?2, ?3, ?4)'
+        ).bind(mood, factura.trim(), (comentarios || '').trim(), ahora).run();
         return new Response(JSON.stringify({ ok: true, id: result.meta.last_row_id }), { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
       } catch (e) {
         return new Response(JSON.stringify({ ok: false, error: 'Error del servidor' }), { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } });
@@ -122,7 +123,7 @@ function ADMIN_HTML(results, success) {
       <td>${moodIcon}</td>
       <td>${escapeHtml(r.factura)}</td>
       <td>${r.comentarios ? escapeHtml(r.comentarios) : '—'}</td>
-      <td>${new Date(r.created_at).toLocaleString('es-PA', { timeZone: 'America/Panama' })}</td>
+      <td>${formatearFecha(r.created_at)}</td>
     </tr>`;
   }).join('');
 
@@ -207,6 +208,15 @@ function limpiar() {
 
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatearFecha(utcStr) {
+  if (utcStr.includes('Z') || utcStr.includes('+')) {
+    // New format: UTC ISO → convert to Panama
+    return new Date(utcStr).toLocaleString('es-PA', { timeZone: 'America/Panama', hour12: true });
+  }
+  // Old format: stored already in Panama time (no timezone)
+  return utcStr;
 }
 
 const HTML = `<!DOCTYPE html>

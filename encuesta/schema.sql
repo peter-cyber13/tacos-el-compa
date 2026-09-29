@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS encuestas (
   mood TEXT NOT NULL CHECK(mood IN ('feliz', 'neutral', 'triste')),
   factura TEXT NOT NULL,
   comentarios TEXT DEFAULT '',
-  created_at TEXT DEFAULT (datetime('now', '-5 hours'))  -- UTC-5 (Panama time)
+  created_at TEXT DEFAULT (datetime('now'))  -- UTC. Dashboard converts to Panama time.
 );
 
 CREATE INDEX IF NOT EXISTS idx_encuestas_created ON encuestas(created_at);
