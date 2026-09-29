@@ -9,3 +9,6 @@ assets = { directory = "static", binding = "ASSETS" }
 binding = "tacos_encuesta"
 database_name = "tacos-encuesta"
 database_id = "eb83acaf-efcc-4a63-bbd2-91a6636a98d4"
+
+[triggers]
+crons = ["0 6 * * 1"]
