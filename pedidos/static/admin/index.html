@@ -137,7 +137,7 @@ header h1 { font-size: 1.2rem; }
 </div>
 
 <script>
-let apiBase = '';
+let apiBase = window.location.pathname.startsWith('/order/') ? '/order' : '';
 let pass = '';
 
 function login() {
@@ -219,7 +219,7 @@ function renderOrders(orders) {
           if (data2.ok && data2.items) {
             let itemsHtml = '';
             for (const item of data2.items) {
-              itemsHtml += \`<div class="item"><span>\${item.quantity}× \${escHtml(item.product_name)}</span><span>$\${item.subtotal.toFixed(2)}</span></div>\`;
+              itemsHtml += \`<div class="item"><span>\${item.quantity}× \${escHtml(item.product_name)}</span><span>$\${item.subtotal.toFixed(2)}</span>\${item.notes ? \`<div class="item-notes">📝 \${escHtml(item.notes)}</div>\` : ''}</div>\`;
             }
             document.getElementById('items-${o.id}').innerHTML = itemsHtml;
           }

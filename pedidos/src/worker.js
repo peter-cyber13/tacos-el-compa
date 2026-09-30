@@ -115,8 +115,8 @@ export default {
           const p = MENU.find(m => m.id === item.product_id);
           const qty = parseInt(item.quantity) || 1;
           await env.tacos_pedidos.prepare(
-            `INSERT INTO order_items (order_id, product_name, product_price, quantity, subtotal) VALUES (?, ?, ?, ?, ?)`
-          ).bind(orderId, p.name, p.price, qty, p.price * qty).run();
+            `INSERT INTO order_items (order_id, product_name, product_price, quantity, subtotal, notes) VALUES (?, ?, ?, ?, ?, ?)`
+          ).bind(orderId, p.name, p.price, qty, p.price * qty, item.notes || '').run();
         }
         
         await env.tacos_pedidos.prepare(

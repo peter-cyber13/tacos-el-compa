@@ -145,6 +145,13 @@ header small { opacity: .85; font-size: .85rem; }
 }
 .btn-primary:hover { opacity: .85; }
 .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+.item-note-input {
+  border: 1px solid var(--rojo);
+  border-radius: 6px;
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+}
 </style>
 </head>
 <body>
@@ -176,7 +183,7 @@ header small { opacity: .85; font-size: .85rem; }
 // ─── State ───
 let products = [];
 let cart = JSON.parse(localStorage.getItem('tacos_carrito') || '{}');
-let apiBase = ''; // same origin
+let apiBase = window.location.pathname.startsWith('/order/') ? '/order' : '';
 
 // ─── Load Products ───
 async function loadProducts() {
@@ -285,9 +292,12 @@ function openCheckout() {
     if (!p) continue;
     const itemTotal = p.price * qty;
     subtotal += itemTotal;
-    cartHtml += `<div class="cart-item">
-      <span>${qty}× ${p.name}</span>
-      <span><button class="remove" onclick="removeFromCart('${id}'); openCheckout()">✕</button> $${itemTotal.toFixed(2)}</span>
+    cartHtml += `<div class="cart-item" style="flex-direction:column;align-items:stretch;gap:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span><strong>${qty}× ${p.name}</strong></span>
+        <span><button class="remove" onclick="removeFromCart('${id}'); openCheckout()">✕</button> $${itemTotal.toFixed(2)}</span>
+      </div>
+      <input type="text" class="item-note-input" data-item-id="${id}" placeholder="Ej: sin cebolla, extra salsa..." style="font-size:.8rem;padding:4px 8px;">
     </div>`;
   }
 
@@ -386,7 +396,10 @@ async function submitOrder() {
 
   const items = Object.entries(cart)
     .filter(([id, qty]) => qty > 0)
-    .map(([product_id, quantity]) => ({ product_id, quantity }));
+    .map(([product_id, quantity]) => ({ 
+      product_id, quantity,
+      notes: (document.querySelector(`.item-note-input[data-item-id="${product_id}"]`)?.value || '').trim()
+    }));
 
   if (items.length === 0) {
     showCheckoutError('El carrito está vacío');
