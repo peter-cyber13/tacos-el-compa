@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛵 Pedidos - Tacos El Compa</title>
+<style>
+:root {
+  --crema: #FBF2E6;
+  --rojo: #A40902;
+  --oro: #FCB416;
+  --texto: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--crema);
+  color: var(--texto);
+  padding-bottom: 80px;
+}
+header {
+  background: var(--rojo);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  position: sticky; top: 0; z-index: 100;
+}
+header h1 { font-size: 1.3rem; }
+header small { opacity: .85; font-size: .85rem; }
+
+.container {
+  max-width: 800px; margin: 0 auto; padding: 1rem;
+}
+.section-title {
+  font-size: 1.15rem; color: var(--rojo); font-weight: 700;
+  border-bottom: 2px solid var(--oro); padding-bottom: .3rem;
+  margin: 1.5rem 0 .8rem; text-transform: uppercase; letter-spacing: .5px;
+}
+.product {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .65rem .5rem; border-bottom: 1px solid var(--border);
+  gap: .5rem;
+}
+.product:last-child { border-bottom: none; }
+.product .info { flex: 1; }
+.product .info .name { font-weight: 600; font-size: .95rem; }
+.product .info .desc { font-size: .8rem; color: var(--muted); margin-top: .15rem; }
+.product .price { font-weight: 700; color: var(--rojo); white-space: nowrap; min-width: 65px; text-align: right; }
+.product .qty-controls {
+  display: flex; align-items: center; gap: .35rem;
+}
+.qty-btn {
+  width: 30px; height: 30px; border: 1px solid var(--rojo); background: white;
+  color: var(--rojo); border-radius: 50%; font-size: 1.1rem; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: .15s;
+}
+.qty-btn:hover { background: var(--rojo); color: white; }
+.qty-btn:disabled { opacity: .3; cursor: not-allowed; }
+.qty-num { font-weight: 700; min-width: 24px; text-align: center; font-size: .95rem; }
+
+/* Cart bar */
+.cart-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; border-top: 2px solid var(--rojo);
+  padding: .75rem 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 200; box-shadow: 0 -2px 10px rgba(0,0,0,.1);
+}
+.cart-bar .total { font-size: 1.1rem; font-weight: 700; }
+.cart-bar .total span { color: var(--rojo); }
+.cart-btn {
+  background: var(--rojo); color: white; border: none;
+  padding: .6rem 1.5rem; border-radius: 8px; font-weight: 600;
+  cursor: pointer; font-size: .95rem; transition: .15s;
+}
+.cart-btn:hover { opacity: .85; }
+.cart-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  z-index: 300; display: none;
+  overflow-y: auto; padding: 1rem;
+}
+.modal-overlay.active { display: block; }
+.modal {
+  background: white; border-radius: 12px; max-width: 500px; margin: 2rem auto;
+  padding: 1.5rem; position: relative;
+}
+.modal h2 { color: var(--rojo); margin-bottom: 1rem; font-size: 1.2rem; }
+.modal .close-btn {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted);
+}
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: .3rem; }
+.form-group input, .form-group textarea, .form-group .input-like {
+  width: 100%; padding: .65rem .75rem; border: 1px solid var(--border);
+  border-radius: 8px; font-size: .95rem; font-family: inherit;
+}
+.form-group textarea { min-height: 60px; resize: vertical; }
+.form-group input:focus, .form-group textarea:focus { outline: 2px solid var(--oro); border-color: transparent; }
+
+.cart-items { margin-bottom: 1rem; }
+.cart-item {
+  display: flex; justify-content: space-between; padding: .5rem 0;
+  border-bottom: 1px solid var(--border); font-size: .9rem;
+}
+.cart-item .remove { color: var(--rojo); cursor: pointer; font-weight: 700; background: none; border: none; font-size: .9rem; }
+
+.yappy-section {
+  background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px;
+  padding: 1rem; margin-bottom: 1rem;
+}
+.yappy-section h3 { font-size: .95rem; margin-bottom: .5rem; color: #92400e; }
+.yappy-section p { font-size: .85rem; color: #78350f; margin-bottom: .5rem; }
+
+.file-upload {
+  border: 2px dashed var(--border); border-radius: 8px; padding: 1.5rem;
+  text-align: center; cursor: pointer; transition: .15s;
+}
+.file-upload:hover { border-color: var(--oro); background: #fefce8; }
+.file-upload.has-file { border-color: #22c55e; background: #f0fdf4; }
+.file-upload input { display: none; }
+.file-upload .preview { max-width: 200px; max-height: 200px; margin: .5rem auto; display: block; border-radius: 8px; }
+
+.success-screen {
+  text-align: center; padding: 2rem 1rem;
+}
+.success-screen .big { font-size: 3rem; margin-bottom: 1rem; }
+.success-screen h2 { color: var(--rojo); margin-bottom: .5rem; }
+.success-screen .order-num { font-size: 1.5rem; font-weight: 700; color: var(--oro); }
+.success-screen p { color: var(--muted); margin-top: .5rem; }
+
+.loading { text-align: center; padding: 2rem; color: var(--muted); }
+.error-msg { color: var(--rojo); font-size: .9rem; margin-bottom: .5rem; }
+
+.btn-primary {
+  width: 100%; padding: .8rem; background: var(--rojo); color: white;
+  border: none; border-radius: 8px; font-weight: 700; font-size: 1rem;
+  cursor: pointer; transition: .15s;
+}
+.btn-primary:hover { opacity: .85; }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌮 Tacos El Compa — Pedidos</h1>
+  <small>Precios en USD (incl. ITBMS)</small>
+</header>
+
+<div class="container" id="app">
+  <div class="loading">Cargando menú…</div>
+</div>
+
+<!-- Cart Bar -->
+<div class="cart-bar" id="cartBar" style="display:none">
+  <div class="total">Total: <span id="cartTotal">$0.00</span></div>
+  <button class="cart-btn" id="checkoutBtn" onclick="openCheckout()">🛒 Pedir</button>
+</div>
+
+<!-- Modal Checkout -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal" id="checkoutContent">
+    <button class="close-btn" onclick="closeModal('checkoutModal')">&times;</button>
+    <div id="checkoutBody"></div>
+  </div>
+</div>
+
+<script>
+// ─── State ───
+let products = [];
+let cart = JSON.parse(localStorage.getItem('tacos_carrito') || '{}');
+let apiBase = ''; // same origin
+
+// ─── Load Products ───
+async function loadProducts() {
+  const r = await fetch(apiBase + '/api/products');
+  const data = await r.json();
+  if (!data.ok) throw new Error('Error al cargar productos');
+  products = data.products;
+  renderCatalog();
+}
+
+// ─── Cart helpers ───
+function saveCart() {
+  localStorage.setItem('tacos_carrito', JSON.stringify(cart));
+  updateCartBar();
+}
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  saveCart();
+}
+
+function removeFromCart(id) {
+  if (cart[id]) {
+    cart[id]--;
+    if (cart[id] <= 0) delete cart[id];
+    saveCart();
+  }
+}
+
+function getQuantity(id) {
+  return cart[id] || 0;
+}
+
+function cartCount() {
+  return Object.values(cart).reduce((a, b) => a + b, 0);
+}
+
+function cartSubtotal() {
+  let total = 0;
+  for (const [id, qty] of Object.entries(cart)) {
+    const p = products.find(x => x.id === id);
+    if (p) total += p.price * qty;
+  }
+  return total;
+}
+
+function updateCartBar() {
+  const bar = document.getElementById('cartBar');
+  const total = cartSubtotal();
+  const count = cartCount();
+  if (count > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('checkoutBtn').textContent = `🛒 Pedir (${count})`;
+  } else {
+    bar.style.display = 'none';
+  }
+  // Update all qty displays
+  document.querySelectorAll('.qty-num[data-id]').forEach(el => {
+    el.textContent = getQuantity(el.dataset.id);
+  });
+}
+
+// ─── Render Catalog ───
+function renderCatalog() {
+  const sections = [...new Set(products.map(p => p.section))];
+  let html = '';
+  
+  for (const section of sections) {
+    html += `<div class="section-title">${section}</div>`;
+    const items = products.filter(p => p.section === section);
+    if (section === 'Tacos Individuales') {
+      html += `<p style="font-size:.85rem;color:var(--muted);margin-bottom:.5rem;">Precio por pieza</p>`;
+    }
+    for (const p of items) {
+      const qty = getQuantity(p.id);
+      html += `
+        <div class="product">
+          <div class="info">
+            <div class="name">${p.name}</div>
+            ${p.description ? `<div class="desc">${p.description}</div>` : ''}
+          </div>
+          <div class="price">$${p.price.toFixed(2)}</div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="removeFromCart('${p.id}')" ${qty === 0 ? 'disabled' : ''}>−</button>
+            <span class="qty-num" data-id="${p.id}">${qty}</span>
+            <button class="qty-btn" onclick="addToCart('${p.id}')">+</button>
+          </div>
+        </div>`;
+    }
+  }
+  
+  document.getElementById('app').innerHTML = html;
+  updateCartBar();
+}
+
+// ─── Checkout Modal ───
+function openCheckout() {
+  const items = Object.entries(cart).filter(([id, qty]) => qty > 0);
+  if (items.length === 0) return;
+  
+  let cartHtml = '';
+  let subtotal = 0;
+  for (const [id, qty] of items) {
+    const p = products.find(x => x.id === id);
+    if (!p) continue;
+    const itemTotal = p.price * qty;
+    subtotal += itemTotal;
+    cartHtml += `<div class="cart-item">
+      <span>${qty}× ${p.name}</span>
+      <span><button class="remove" onclick="removeFromCart('${id}'); openCheckout()">✕</button> $${itemTotal.toFixed(2)}</span>
+    </div>`;
+  }
+
+  document.getElementById('checkoutBody').innerHTML = `
+    <h2>📋 Tu Pedido</h2>
+    <div class="cart-items">${cartHtml}</div>
+    <div class="cart-item" style="font-weight:700;font-size:1rem;">
+      <span>Subtotal</span><span>$${subtotal.toFixed(2)}</span>
+    </div>
+
+    <div class="yappy-section">
+      <h3>📸 Método de pago: Yappy</h3>
+      <p>Número de Yappy: <strong>6232-6405</strong></p>
+      <p>Envía el monto total (subtotal + envío) y toma una captura de pantalla para subirla como comprobante.</p>
+      <p>Tu pedido se procesará <strong>solo después</strong> de que confirmemos el pago.</p>
+    </div>
+
+    <div class="yappy-section" style="background:#f0fdf4;border-color:#22c55e;">
+      <h3>📸 ¿Ya pagaste?</h3>
+      <p>Sube la captura de tu transferencia de Yappy como comprobante:</p>
+    </div>
+
+    <div class="form-group">
+      <label>Nombre completo *</label>
+      <input type="text" id="fieldName" placeholder="Tu nombre">
+    </div>
+    <div class="form-group">
+      <label>Teléfono *</label>
+      <input type="tel" id="fieldPhone" placeholder="Ej: 6232-6405">
+    </div>
+    <div class="form-group">
+      <label>Dirección de envío *</label>
+      <textarea id="fieldAddress" placeholder="Calle, casa #, barrio, puntos de referencia"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Costo de envío ($)</label>
+      <input type="number" id="fieldDelivery" step="0.01" min="0" placeholder="0.00">
+    </div>
+    <div class="form-group">
+      <label>Notas para el pedido</label>
+      <textarea id="fieldNotes" placeholder="Ej: extra limón, sin cebolla, etc."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Comprobante de Yappy</label>
+      <div class="file-upload" id="yappyDrop" onclick="document.getElementById('yappyInput').click()">
+        <input type="file" id="yappyInput" accept="image/*" capture="environment" onchange="handleYappyFile(event)">
+        <div id="yappyPlaceholder">📸 Toca para tomar/subir foto del comprobante</div>
+        <img id="yappyPreview" class="preview" style="display:none">
+      </div>
+    </div>
+    <div id="checkoutError" class="error-msg"></div>
+    <button class="btn-primary" id="submitOrderBtn" onclick="submitOrder()">✅ Confirmar Pedido</button>
+  `;
+
+  const deliveryTotal = subtotal + (parseFloat(document.getElementById('fieldDelivery')?.value) || 0);
+  document.getElementById('checkoutModal').classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+let yappyBase64 = '';
+
+function handleYappyFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    yappyBase64 = ev.target.result.split(',')[1];
+    document.getElementById('yappyDrop').classList.add('has-file');
+    document.getElementById('yappyPlaceholder').textContent = '✅ Comprobante subido';
+    const preview = document.getElementById('yappyPreview');
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitOrder() {
+  const btn = document.getElementById('submitOrderBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando pedido…';
+  document.getElementById('checkoutError').textContent = '';
+
+  const name = document.getElementById('fieldName').value.trim();
+  const phone = document.getElementById('fieldPhone').value.trim();
+  const address = document.getElementById('fieldAddress').value.trim();
+  const deliveryCost = parseFloat(document.getElementById('fieldDelivery').value) || 0;
+  const notes = document.getElementById('fieldNotes').value.trim();
+  
+  if (!name) { showCheckoutError('El nombre es requerido'); btn.disabled = false; btn.textContent = '✅ Confirmar Pedido'; return; }
+  if (!phone) { showCheckoutError('El teléfono es requerido'); btn.disabled = false; btn.textContent = '✅ Confirmar Pedido'; return; }
+  if (!address) { showCheckoutError('La dirección es requerida'); btn.disabled = false; btn.textContent = '✅ Confirmar Pedido'; return; }
+
+  const items = Object.entries(cart)
+    .filter(([id, qty]) => qty > 0)
+    .map(([product_id, quantity]) => ({ product_id, quantity }));
+
+  if (items.length === 0) {
+    showCheckoutError('El carrito está vacío');
+    btn.disabled = false; btn.textContent = '✅ Confirmar Pedido';
+    return;
+  }
+
+  try {
+    const r = await fetch(apiBase + '/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_name: name,
+        phone,
+        address,
+        delivery_notes: notes,
+        delivery_cost: deliveryCost,
+        items,
+        yappy_proof: yappyBase64,
+      }),
+    });
+    const data = await r.json();
+    if (!data.ok) {
+      showCheckoutError(data.error || 'Error al crear pedido');
+      btn.disabled = false; btn.textContent = '✅ Confirmar Pedido';
+      return;
+    }
+
+    // Success
+    cart = {};
+    saveCart();
+    updateCartBar();
+    
+    document.getElementById('checkoutBody').innerHTML = `
+      <div class="success-screen">
+        <div class="big">🌮</div>
+        <h2>🎉 Pedido Recibido</h2>
+        <p>Tu número de pedido es:</p>
+        <div class="order-num">#${data.order_id}</div>
+        <p style="margin-top:1rem;">Recibiremos tu comprobante de Yappy y confirmaremos tu pedido en breve.</p>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:.5rem;">Te notificaremos por teléfono cuando esté listo.</p>
+        <button class="btn-primary" style="margin-top:1.5rem;" onclick="closeModal('checkoutModal')">Cerrar</button>
+      </div>
+    `;
+  } catch (e) {
+    showCheckoutError('Error de conexión: ' + e.message);
+    btn.disabled = false; btn.textContent = '✅ Confirmar Pedido';
+  }
+}
+
+function showCheckoutError(msg) {
+  document.getElementById('checkoutError').textContent = msg;
+}
+
+// ─── Init ───
+loadProducts().catch(e => {
+  document.getElementById('app').innerHTML = `<div class="error-msg">Error al cargar: ${e.message}</div>`;
+});
+</script>
+</body>
+</html>
