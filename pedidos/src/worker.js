@@ -71,7 +71,12 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
     
     const url = new URL(request.url);
-    const path = url.pathname;
+    let path = url.pathname;
+    
+    // Strip /order prefix when behind domain route
+    if (path.startsWith('/order/')) {
+      path = path.replace(/^\/order/, '');
+    }
     
     // ── API Routes ──
     
