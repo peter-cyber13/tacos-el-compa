@@ -316,14 +316,20 @@ function openCheckout() {
   document.getElementById('checkoutBody').innerHTML = `
     <h2>📋 Tu Pedido</h2>
     <div class="cart-items">${cartHtml}</div>
-    <div class="cart-item" style="font-weight:700;font-size:1rem;">
+    <div class="cart-item" style="font-weight:600;">
       <span>Subtotal</span><span>$${subtotal.toFixed(2)}</span>
+    </div>
+    <div class="cart-item" style="font-weight:600;">
+      <span>Envío</span><span>$5.00</span>
+    </div>
+    <div class="cart-item" style="font-weight:700;font-size:1.1rem;border-top:2px solid var(--oro);padding-top:.5rem;">
+      <span>TOTAL</span><span>$${(subtotal+5).toFixed(2)}</span>
     </div>
 
     <div class="yappy-section">
       <h3>📸 Método de pago: Yappy</h3>
       <p>Número de Yappy: <strong>6070 0385</strong></p>
-      <p>Envía el monto total (subtotal + envío) y toma una captura de pantalla para subirla como comprobante.</p>
+      <p>Envía el monto <strong>total</strong> por Yappy y sube la captura como comprobante.</p>
       <p>Tu pedido se procesará <strong>solo después</strong> de que confirmemos el pago.</p>
     </div>
 
