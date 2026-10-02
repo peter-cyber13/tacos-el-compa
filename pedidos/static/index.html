@@ -168,7 +168,10 @@ header small { opacity: .85; font-size: .85rem; }
 <!-- Cart Bar -->
 <div class="cart-bar" id="cartBar" style="display:none">
   <div class="total">Total: <span id="cartTotal">$0.00</span></div>
-  <button class="cart-btn" id="checkoutBtn" onclick="openCheckout()">🛒 Pedir</button>
+  <div style="display:flex;gap:.5rem;">
+    <button class="cart-btn" style="background:white;color:var(--rojo);border:2px solid var(--rojo);" onclick="clearCart()">🗑️ Limpiar</button>
+    <button class="cart-btn" id="checkoutBtn" onclick="openCheckout()">🛒 Pedir</button>
+  </div>
 </div>
 
 <!-- Modal Checkout -->
@@ -228,6 +231,12 @@ function cartSubtotal() {
     if (p) total += p.price * qty;
   }
   return total;
+}
+
+function clearCart() {
+  cart = {};
+  saveCart();
+  updateCartBar();
 }
 
 function updateCartBar() {
@@ -334,7 +343,8 @@ function openCheckout() {
     </div>
     <div class="form-group">
       <label>Costo de envío ($)</label>
-      <input type="number" id="fieldDelivery" step="0.01" min="0" placeholder="0.00">
+      <strong>$5.00</strong> <small>(fijo)</small>
+      <input type="hidden" id="fieldDelivery" value="5">
     </div>
     <div class="form-group">
       <label>Notas para el pedido</label>
