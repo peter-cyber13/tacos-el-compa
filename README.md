@@ -61,5 +61,22 @@ Entradas, Sopas, Tacos, Tacos Individuales, Flautas, Quesadillas, Platos Fuertes
 
 ---
 
-**HEAD:** [`e5fa1d5`](https://github.com/peter-cyber13/tacos-el-compa/commit/e5fa1d5) (2026-09-29)
-**Inicio:** ~2026-08 · **Última actualización:** 2026-10-05
+## 📋 Control de versiones
+
+| Fecha | Commit | Descripción |
+|---|---|---|
+| 2026-10-05 | [`4033ae6`](https://github.com/peter-cyber13/tacos-el-compa/commit/4033ae6) | Docs: README con estructura, stack y últimas features |
+| 2026-10-01 | [`9c69fa8`](https://github.com/peter-cyber13/tacos-el-compa/commit/9c69fa8) | Feat: muestra envío $5 y total en resumen checkout |
+| 2026-10-01 | [`ad03134`](https://github.com/peter-cyber13/tacos-el-compa/commit/ad03134) | Favicon: logo de Tacos El Compa |
+| 2026-10-01 | [`f66ebe6`](https://github.com/peter-cyber13/tacos-el-compa/commit/f66ebe6) | Delivery fijo + WhatsApp Bridge completo |
+| 2026-09-29 | [`e5fa1d5`](https://github.com/peter-cyber13/tacos-el-compa/commit/e5fa1d5) | Feat: per-item notes in checkout + DB migration |
+| 2026-09-29 | [`63928ad`](https://github.com/peter-cyber13/tacos-el-compa/commit/63928ad) | Feat: sistema de pedidos online — Worker + D1 + frontend |
+| 2026-09-28 | [`a0777bd`](https://github.com/peter-cyber13/tacos-el-compa/commit/a0777bd) | Feat: dashboard admin + cron limpieza semanal |
+| 2026-09-28 | [`195c839`](https://github.com/peter-cyber13/tacos-el-compa/commit/195c839) | Feat: encuesta caritas con sombrero |
+| 2026-09-28 | [`ccbee34`](https://github.com/peter-cyber13/tacos-el-compa/commit/ccbee34) | Feat: encuesta + D1 para Tacos El Compa |
+| 2026-09-15 | [`a4c5f9b`](https://github.com/peter-cyber13/tacos-el-compa/commit/a4c5f9b) | Menu: todas las secciones con precios actualizados |
+
+---
+
+**HEAD:** [`4033ae6`](https://github.com/peter-cyber13/tacos-el-compa/commit/4033ae6) (2026-10-05)
+**Inicio:** ~2026-08 · **Última actualización:** 2026-10-05 | # commits: 70
