@@ -752,11 +752,11 @@
   </a>
 </footer>
 
-<!-- Popup promoción (rota al azar: Happy Hour o Karaoke) -->
+<!-- Popup despedida El Compa -->
 <div id="promoModal" aria-hidden="true">
   <div class="promo-caja">
-    <button id="promoCerrar" aria-label="Cerrar promoción">✕</button>
-    <img class="promo-img" id="promoImg" src="" alt="Promoción">
+    <button id="promoCerrar" aria-label="Cerrar mensaje">✕</button>
+    <img class="promo-img" id="promoImg" src="img/elcompa-despedida.jpg" alt="El Compa dijo órale ya fue">
   </div>
 </div>
 
@@ -766,14 +766,6 @@
   var btn = document.getElementById('promoCerrar');
   var img = document.getElementById('promoImg');
   if (!modal || !btn || !img) return;
-  // Rotación aleatoria: elige una de las promos cada vez que carga
-  var promos = [
-    { src: 'img/promo-happy-hour.jpg', alt: 'Promoción Happy Hour: Margaritas 2x1 por $8 de martes a viernes 4-7pm' },
-    { src: 'img/promo-karaoke.jpg', alt: 'Karaoke miércoles y viernes 8-11pm: nachos $8 y cubetazo de Balboa o Atlas $10' }
-  ];
-  var elegida = promos[Math.floor(Math.random() * promos.length)];
-  img.src = elegida.src;
-  img.alt = elegida.alt;
   function abrir() {
     modal.classList.add('abierto');
     modal.setAttribute('aria-hidden', 'false');
@@ -787,7 +779,6 @@
   btn.addEventListener('click', cerrar);
   modal.addEventListener('click', function(e) { if (e.target === modal) cerrar(); });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') cerrar(); });
-  // Abre al cargar, pequeño retraso para que la pagina pinte primero
   window.addEventListener('load', function() { setTimeout(abrir, 600); });
 })();
 </script>
